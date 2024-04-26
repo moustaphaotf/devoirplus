@@ -32,10 +32,13 @@ else {
 
 <?php require('partials/header.php') ?>
 
-<form action="logout.php" method="post" class="my-2 d-flex align-items-center justify-content-end">
-    <?=$_SESSION['USER']?>
-    <button class="btn text-primary" type="submit">Se déconnecter</button>
-</form>
+<div class="d-flex gap-2 align-items-center justify-content-end">
+    <a href="index.php" class="btn text-primary">&larr; Retourner à l'Accueil</a>
+    <form action="logout.php" method="post" class="my-2 d-flex align-items-center justify-content-end">
+        <?=$_SESSION['USER']?>
+        <button class="btn text-primary" type="submit">Se déconnecter</button>
+    </form>
+</div>
 
 <form method="get" class="m-4">
     <div class="d-flex align-items-center gap-2 justify-content-end" >
