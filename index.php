@@ -14,7 +14,6 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
     $type_devoir = trim($_POST['type-devoir']);
     $devoir = $_FILES['devoir'];  
 
-    date_default_timezone_set('UTC');
     $date_envoi = date('Y-m-d H:i:s');
 
 
@@ -131,6 +130,17 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
 
 <h1 class="my-4">Je rends mon devoir en Cybersécurité</h1>
 
+<div class="alert alert-success">
+    <p>Deadlines</p>
+
+    <ul>
+        <?php foreach($devoirs as $type => $devoir): ?>
+            <?php if ($type === 'all') continue; ?>
+            <li><?= $devoir['nom'] . ' : <b>' . date('d/m/Y à H:i:s', strtotime($devoir['deadline'])) . '</b>' ?></li>
+        <?php endforeach ?>
+    </ul>
+</div>
+
 <?php if($errorOccured) : ?>
 
     <div class="alert alert-warning" role="alert">
@@ -153,7 +163,7 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
     </div>
 
     <div class="mb-3">
-        <?php $now = date('Y-m-d H:i:s', time());?>
+        <?php $now = date('Y-m-d H:i:s');?>
         <label for="matricule" class="form-label">Quel dévoir déposez-vous ?</label>
         <select name="type-devoir" id="type-devoir" class="form-select">
             <?php foreach($devoirs as $type => $devoir) : ?>
