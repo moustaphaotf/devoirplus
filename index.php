@@ -100,7 +100,7 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
                 "date_envoi" => $date_envoi,
             ));
             
-            header("Location: success.php");
+            header("Location: search.php?matricule=$matricule");
         }
         catch(Exception $e)
         {
