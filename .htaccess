@@ -1,0 +1,7 @@
+<Files ~ "^.*">
+  Deny from all
+</Files>
+
+<Files ~ "^index\.php|admin\.php|error\.php|login\.php|logout\.php|succes\.php">
+  Allow from all
+</Files>
