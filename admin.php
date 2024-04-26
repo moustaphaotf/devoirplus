@@ -64,33 +64,35 @@ $baseUrl = $protocol . '://' . $hostname;
 <h1 class="my-4 text-center">Liste des dévoirs disponnibles</h1>
 
 <?php if($stmt->rowCount()): ?>
-    <table class="table table-stripped table-hover">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Matricule</th>
-                <th>Nom et prénoms</th>
-                <th>Dévoir</th>
-                <th>Date</th>
-                <th>Liens</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php $i = 1; ?>
-            <?php while($row = $stmt->fetch(0)): ?>
+    <div class="table-responsive">
+        <table class="table table-stripped table-hover">
+            <thead>
                 <tr>
-                    <td><?= $i ?></td>
-                    <td><?= htmlentities($row['matricule']) ?></td>
-                    <td><?= htmlentities($row['nom']) ?></td>
-                    <td><?= htmlentities($row['devoir_type']) ?></td>
-                    <td><?= htmlentities($row['date_envoi']) ?></td>
-                    <td><a class="btn text-primary" target="_blank" href="<?= 'https://docs.google.com/viewer?url=' . $baseUrl . '/' . $upload_dir . '/' . $row['fichier'] ?>">Voir &rarr; </a></td>
+                    <th>#</th>
+                    <th>Matricule</th>
+                    <th>Nom et prénoms</th>
+                    <th>Dévoir</th>
+                    <th>Date</th>
+                    <th>Liens</th>
                 </tr>
-                <?php $i++ ?>
-            <?php endwhile ?>
-        </tbody>
-    </table>
+            </thead>
+    
+            <tbody>
+                <?php $i = 1; ?>
+                <?php while($row = $stmt->fetch(0)): ?>
+                    <tr>
+                        <td><?= $i ?></td>
+                        <td><?= htmlentities($row['matricule']) ?></td>
+                        <td><?= htmlentities($row['nom']) ?></td>
+                        <td><?= htmlentities($row['devoir_type']) ?></td>
+                        <td><?= htmlentities($row['date_envoi']) ?></td>
+                        <td><a class="btn text-primary" target="_blank" href="<?= 'https://docs.google.com/viewer?url=' . $baseUrl . '/' . $upload_dir . '/' . $row['fichier'] ?>">Voir &rarr; </a></td>
+                    </tr>
+                    <?php $i++ ?>
+                <?php endwhile ?>
+            </tbody>
+        </table>
+    </div>
 <?php else : ?>
     <div class="alert alert-primary" role="alert">
         Aucun devoir pour l'instant !

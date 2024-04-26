@@ -115,6 +115,9 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
 
 <?php require('partials/header.php') ?>
 
+<div class="my-2 d-flex align-items-center justify-content-end">
+    <a class="btn text-primary" href="admin.php">Voir dashboard &rarr;</a>
+</div>
 
 <h1 class="my-4">Je rends mon devoir en Cybersécurité</h1>
 
