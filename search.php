@@ -1,10 +1,10 @@
 <?php
 $error = "";
 $titre = "Recherche";
+require ('config.php');
 
 if (isset($_GET['matricule']))
 {
-    require ('config.php');
     require "dbconfig.php";
     $matricule = $_GET['matricule'];
 
@@ -80,7 +80,7 @@ if (isset($_GET['matricule']))
                         <td><?= $i ?></td>
                         <td><?= $devoir['devoir_type'] ?></td>
                         <td><?= $devoir['date_envoi'] ?></td>
-                        <td><a class="btn text-primary" href="https://docs.google.com/viewer?url=$baseUrl/$upload_dir/<?= $devoir['fichier'] ?>">Voir &rarr;</td>
+                        <td><a class="btn text-primary" href="https://docs.google.com/viewer?url=<?= $baseUrl . "/" . $upload_dir . "/" . $devoir['fichier'] ?>">Voir &rarr;</td>
                     </tr>
     
                     <?php $i++ ?>
