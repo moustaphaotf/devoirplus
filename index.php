@@ -4,13 +4,6 @@ $titre = "Accueil";
 $form_errors = [];
 $errorOccured = false;
 
-$devoirs = array(
-    "all" => "Choisissez une option",
-    "intrusion-windows" => "Test d'intrusion Windows",
-    "intrusion-metasploitable" => "Test d'intrusion Metasploitable",
-    "audit-web" => "Audit Site Web",
-);
-
 if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricule']) && isset($_FILES['devoir']))
 {
     require __DIR__ . DIRECTORY_SEPARATOR . 'dbconfig.php';
@@ -19,7 +12,9 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
     $nom = trim($_POST['nom']);
     $matricule = join(explode(' ', trim($_POST['matricule'])));
     $type_devoir = trim($_POST['type-devoir']);
-    $devoir = $_FILES['devoir'];    
+    $devoir = $_FILES['devoir'];  
+    $date_envoi = date('Y-m-d H:i:s', time());
+
 
 
     // Vérification des données
@@ -28,9 +23,14 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
         $form_errors[] = "Le nom est obligatoire";
     }
 
-    if($type_devoir == "" || $type_devoir == "all")
+    if($type_devoir == "" || !isset($devoirs[$type_devoir]) || $type_devoir == "all")
     {
         $form_errors[] = "Le type de devoir est obligatoire";
+    } 
+    
+    if($date_envoi > $devoirs[$type_devoir]['deadline'])
+    {
+        $form_errors[] = "La délai de dépôt est dépassé pour ce devoir";
     }
 
     if($matricule == ""){
@@ -91,9 +91,6 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
             // Enregistrer le devoir
             
             $devoirStmt = $db->prepare("INSERT INTO devoir(devoir_type, fichier, etudiant_id, date_envoi) VALUES(:devoir_type, :fichier, :etudiant_id, :date_envoi);");
-            
-            $date_envoi = date('Y-m-d H:i:s', $date_envoi);
-
             $devoirStmt->execute(array(
                 "devoir_type" => $type_devoir,
                 "fichier"=> $fichier,
@@ -154,10 +151,11 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
     </div>
 
     <div class="mb-3">
+        <?php $now = date('Y-m-d H:i:s', time());?>
         <label for="matricule" class="form-label">Quel dévoir déposez-vous ?</label>
         <select name="type-devoir" id="type-devoir" class="form-select">
             <?php foreach($devoirs as $type => $devoir) : ?>
-                <option value="<?= $type ?>" <?= $errorOccured && $type_devoir === $type ? "selected" : "" ?>><?= $devoir ?></option>
+                <option <?= $type !== 'all' && $now > $devoir['deadline'] ? "disabled" : "" ?> value="<?= $type ?>" <?= $errorOccured && $type_devoir === $type ? "selected" : "" ?>><?= $devoir['nom'] . ' - ' . $devoir['deadline'] ?></option>
             <?php endforeach ?>
         </select>
     </div>

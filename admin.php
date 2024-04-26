@@ -46,7 +46,7 @@ else {
         <div>
             <select class="form-select" name="type-devoir" id="type-devoir">
                 <?php foreach($devoirs as $type => $devoir) : ?>
-                    <option value="<?= $type ?>" <?= $devoir_a_montrer === $type ? "selected" : "" ?>><?= $devoir ?></option>
+                    <option value="<?= $type ?>" <?= $devoir_a_montrer === $type ? "selected" : "" ?>><?= $devoir['nom'] ?></option>
                 <?php endforeach ?>
             </select>
         </div>
