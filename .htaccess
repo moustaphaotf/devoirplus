@@ -1,7 +1,6 @@
-<Files ~ "^.*">
-  Deny from all
-</Files>
-
-<Files ~ "^index\.php|admin\.php|error\.php|login\.php|logout\.php|succes\.php">
-  Allow from all
-</Files>
+RewriteEngine on
+RewriteRule ^partials/?$ - [F,L]
+RewriteRule ^\.git/?$ - [F,L]
+RewriteRule ^\.gitignore$ - [F,L]
+RewriteRule ^config\.php$ - [F,L]
+RewriteRule ^dbconfig\.php\.example$ - [F,L]
