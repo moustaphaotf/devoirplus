@@ -13,7 +13,9 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
     $matricule = join(explode(' ', trim($_POST['matricule'])));
     $type_devoir = trim($_POST['type-devoir']);
     $devoir = $_FILES['devoir'];  
-    $date_envoi = date('Y-m-d H:i:s', time());
+
+    date_default_timezone_set('UTC');
+    $date_envoi = date('Y-m-d H:i:s');
 
 
 
