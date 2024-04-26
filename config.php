@@ -6,3 +6,7 @@ $devoirs = array(
     "intrusion-metasploitable" => "Test d'intrusion Metasploitable",
     "audit-web" => "Audit Site Web",
 );
+
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$hostname = $_SERVER['HTTP_HOST'];
+$baseUrl = $protocol . '://' . $hostname;
