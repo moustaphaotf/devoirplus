@@ -63,7 +63,7 @@ if (isset($_GET['matricule']))
         </div>
     <?php else: ?>
         <div class="alert alert-success">
-            <p class="fw-bold m-0"><?=$student['nom'] . "(" . htmlentities($matricule) . ")"?></p>
+            <p class="fw-bold m-0"><?=$student['nom']?></p>
         </div>
         
         <table class="table table-stripped table-hover table-responsive">
