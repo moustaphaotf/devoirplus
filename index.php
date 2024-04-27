@@ -1,4 +1,5 @@
 <?php
+session_start();
 require('config.php');
 $titre = "Accueil";
 $form_errors = [];
@@ -97,9 +98,7 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
                 "fichier"=> $fichier,
                 "etudiant_id" => $studId,
                 "date_envoi" => $date_envoi,
-            ));
-            
-            header("Location: search.php?matricule=$matricule");
+            ));            
         }
         catch(Exception $e)
         {
@@ -107,26 +106,38 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
             exit(1);
         }
     }
+    require('partials/header.php')
+?>
+<div class="alert alert-success m-4">
+    <h1>Félicitations !</h1>
+    <p>Votre devoir a été enregistré avec succès</p>
+    <p>Vous pouvez le consulter à partir de <a href='<?="https://docs.google.com/viewer?url=$baseUrl/$upload_dir/$fichier"?>'>ce lien</a></p>
+</div>
+<?php
 }
-
+else {
 ?>
 
 <?php require('partials/header.php') ?>
 
 <div class="my-2 d-flex align-items-center justify-content-end">
-    <a class="btn text-primary" href="search.php">Vérifier mes dévoirs</a>
+    <?php if(isset($_SESSION['USER'])): ?>
+        <a class="btn text-primary" href="search.php">Vérifier un dévoir</a>
+    <?php endif ?>
     <a class="btn text-primary" href="admin.php">Voir dashboard &rarr;</a>
 </div>
 
-<form action="search.php" method="get" class="d-flex gap-2 align-items-center justify-content-end">
-    <label for="matricule">Matricule</label>
-    <div>
-        <input required placeholder="Ex: 2104XXXXXX" name="matricule" id="matricule" type="search" class="form-control">
-    </div>
-    <div>
-        <button class="btn btn-primary" type="submit">Rechercher</button>
-    </div>
-</form>
+<?php if(isset($_SESSION['USER'])): ?>
+    <form action="search.php" method="get" class="d-flex gap-2 align-items-center justify-content-end">
+        <label for="matricule">Matricule</label>
+        <div>
+            <input required placeholder="Ex: 2104XXXXXX" name="matricule" id="matricule" type="search" class="form-control">
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit">Rechercher</button>
+        </div>
+    </form>
+<?php endif ?>
 
 <h1 class="my-4">Je rends mon devoir en Cybersécurité</h1>
 
@@ -183,4 +194,5 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
 </form>
 
 
+<?php } ?>
 <?php require('partials/footer.php') ?>

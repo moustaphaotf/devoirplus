@@ -1,7 +1,14 @@
 <?php
+session_start();
 $error = "";
 $titre = "Recherche";
 require ('config.php');
+
+if(!isset($_SESSION['USER']))
+{
+    header('Location: index.php');
+    exit(1);
+}
 
 if (isset($_GET['matricule']))
 {
