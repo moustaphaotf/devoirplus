@@ -63,7 +63,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
     
     <div class="mb-3">
         <label class="form-label" for="password">Mot de passe</label>
-        <input class="form-control" id="password" type="text" name="password">
+        <input class="form-control" id="password" type="password" name="password">
     </div>
 
     <div class="mb-3">
