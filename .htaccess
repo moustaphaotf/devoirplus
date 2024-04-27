@@ -4,3 +4,5 @@ RewriteRule ^\.git/?$ - [F,L]
 RewriteRule ^\.gitignore$ - [F,L]
 RewriteRule ^config\.php$ - [F,L]
 RewriteRule ^dbconfig\.php\.example$ - [F,L]
+
+php_value upload_max_filesize 10M
