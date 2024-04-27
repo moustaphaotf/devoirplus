@@ -45,14 +45,29 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
         $form_errors[] = "Le matricule doit compter 10 chiffres";
     } 
 
-    if($devoir['size'] == 0)
+    if ($devoir['error'] !== UPLOAD_ERR_OK) 
+    {
+        switch($devoir['error'])
+        {
+            case UPLOAD_ERR_INI_SIZE:
+                $form_errors[] = "La taille du fichier est trop grande";
+                break;
+
+            case UPLOAD_ERR_PARTIAL:
+                $form_errors[] = "Le téléchargement du fichier est incomplet";
+                break;
+
+            case UPLOAD_ERR_NO_FILE:
+                $form_errors[] = "Aucun fichier n'est fourni !";
+                break;
+            default:
+                $form_errors[] = "Impossible d'uploader votre fichier !";
+                break;
+        }
+    } else if($devoir['size'] == 0)
     {
         $form_errors[] = "Le dévoir est obligatoire";
-    } else if ($devoir['size'] >= 30 * 1024 * 1024)
-    {
-        $form_errors[] = "La taille du fichier est trop grande";
-    }
-    if($devoir['type'] !== "application/pdf")
+    } else if($devoir['type'] !== "application/pdf")
     {
         $form_errors[] = "Le format du dévoir doit être en PDF";
     }
@@ -106,16 +121,7 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
             exit(1);
         }
     }
-    require('partials/header.php')
-?>
-<div class="alert alert-success m-4">
-    <h1>Félicitations !</h1>
-    <p>Votre devoir a été enregistré avec succès</p>
-    <p>Vous pouvez le consulter à partir de <a href='<?="https://docs.google.com/viewer?url=$baseUrl/$upload_dir/$fichier"?>'>ce lien</a></p>
-</div>
-<?php
 }
-else {
 ?>
 
 <?php require('partials/header.php') ?>
@@ -160,6 +166,12 @@ else {
             <li><?= $error ?></li>
         <?php endforeach ?>
     </div>
+<?php elseif(isset($matricule)) : ?>
+    <div class="alert alert-success m-4">
+        <h1>Félicitations !</h1>
+        <p>Votre devoir a été enregistré avec succès</p>
+        <p>Vous pouvez le consulter à partir de <a href='<?="https://docs.google.com/viewer?url=$baseUrl/$upload_dir/$fichier"?>'>ce lien</a></p>
+    </div>
 <?php endif ?>
 
 <form action="" method="post" enctype="multipart/form-data">
@@ -193,6 +205,4 @@ else {
 
 </form>
 
-
-<?php } ?>
 <?php require('partials/footer.php') ?>

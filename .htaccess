@@ -5,12 +5,10 @@ RewriteRule ^\.gitignore$ - [F,L]
 RewriteRule ^config\.php$ - [F,L]
 RewriteRule ^dbconfig\.php\.example$ - [F,L]
 
-<IfModule mod_php8.c>
+<IfModule mod_php.c>
     php_value upload_max_filesize 10M
-    php_value post_max_size 12M
 </IfModule>
 
 <IfModule mod_php5.c>
     php_value upload_max_filesize 10M
-    php_value post_max_size 12M
 </IfModule>
