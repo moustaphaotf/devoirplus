@@ -9,7 +9,7 @@ $devoirs = array(
     ),
     "intrusion-metasploitable" => array(
         "nom" => "Test d'intrusion Metasploitable",
-        "deadline" => "2024-04-27 23:59:59",
+        "deadline" => "2024-04-28 23:59:59",
     ),
     // "intrusion-windows" => array(
     //     "nom" => "Test d'intrusion Windows",
