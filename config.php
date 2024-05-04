@@ -13,11 +13,11 @@ $devoirs = array(
     ),
     "intrusion-windows" => array(
         "nom" => "Test d'intrusion Windows",
-        "deadline" => "2024-05-04 23:59:59",
+        "deadline" => "2024-05-11 23:59:59",
     ),
     "audit-web" => array(
         "nom" => "Audit Site Web",
-        "deadline" => "2024-05-04 23:59:59",
+        "deadline" => "2024-05-11 23:59:59",
     ),
 );
 
