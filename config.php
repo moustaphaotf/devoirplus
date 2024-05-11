@@ -24,3 +24,6 @@ $devoirs = array(
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
 $hostname = $_SERVER['HTTP_HOST'];
 $baseUrl = $protocol . '://' . $hostname;
+
+// should show links to assignment to admin or not ?
+$shoulShowLink = true;

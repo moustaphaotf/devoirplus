@@ -83,7 +83,9 @@ else {
                         <td><?= htmlentities($row['nom']) ?></td>
                         <td><?= htmlentities($row['devoir_type']) ?></td>
                         <td><?= htmlentities($row['date_envoi']) ?></td>
-                        <td><a class="btn text-primary" target="_blank" href="<?= 'https://docs.google.com/viewer?url=' . $baseUrl . '/' . $upload_dir . '/' . $row['fichier'] ?>">Voir &rarr; </a></td>
+                        <td>
+                            <a class="btn text-primary" target="_blank" href="<?= $shoulShowLink ? ('https://docs.google.com/viewer?url=' . $baseUrl . '/' . $upload_dir . '/' . $row['fichier']) : $baseUrl ?>">Voir &rarr; </a>
+                        </td>
                     </tr>
                     <?php $i++ ?>
                 <?php endwhile ?>
