@@ -63,7 +63,7 @@ else {
 <?php if($devoir_a_montrer !== 'all'): ?>
     <div class="alert alert-secondary">
         <span>Devoirs Dispo: <span class="fw-bold"><?= $stmt->rowCount() ?>/178</span></span><br>
-        <span>Taux: <span class="fw-bold"><?= round($stmt->rowCount() / 178, 2) ?>%</span></span>
+        <span>Taux: <span class="fw-bold"><?= round($stmt->rowCount() / 178, 2)*100 ?>%</span></span>
     </div>
 <?php endif ?>
 
