@@ -27,6 +27,7 @@ else {
     $stmt->execute(array($devoir_a_montrer));
 }
 
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -60,14 +61,46 @@ else {
 
 <h1 class="my-4 text-center">Liste des dévoirs disponnibles</h1>
 
-<?php if($devoir_a_montrer !== 'all'): ?>
-    <div class="alert alert-secondary">
+<div class="alert alert-secondary">
+    <?php if($devoir_a_montrer !== 'all'): ?>
         <span>Devoirs Dispo: <span class="fw-bold"><?= $stmt->rowCount() ?>/178</span></span><br>
         <span>Taux: <span class="fw-bold"><?= round($stmt->rowCount() / 178, 2)*100 ?>%</span></span>
-    </div>
-<?php endif ?>
+    <?php else: 
+        $devCount = $devoirs;
+        unset($devCount['all']);
 
+        foreach($devCount as $type => $content) {
+            $devCount[$type] = 0;
+        }
 
+        foreach($rows as $row) {
+            $devCount[$row['devoir_type']]++;
+        }
+
+        echo "
+            <table class='table table-secondary'>
+                <tr>
+                    <th>#</th>
+                    <th>Type Dévoir</th>
+                    <th>Taux de Soumission</th>
+                </tr>
+                ";
+        $i = 1;
+        foreach($devCount as $type => $count) {
+            echo "<tr>";
+            echo "<td>$i</td>";
+            echo "<td>$type</td>";
+            echo "<td class='fw-bold'>$count / 178 ( " . round($count / 178  * 100, 2) . "% ) </td>";
+            echo "<tr>";
+            $i++;
+        }
+
+        echo "</table>";
+
+    endif ?>
+</div>
+    
+    
 <?php if($stmt->rowCount()): ?>
     <div class="table-responsive">
         <table class="table table-stripped table-hover">
@@ -84,7 +117,7 @@ else {
     
             <tbody>
                 <?php $i = 1; ?>
-                <?php while($row = $stmt->fetch(0)): ?>
+                <?php foreach($rows as $row): ?>
                     <tr>
                         <td><?= $i ?></td>
                         <td><?= htmlentities($row['matricule']) ?></td>
@@ -96,7 +129,7 @@ else {
                         </td>
                     </tr>
                     <?php $i++ ?>
-                <?php endwhile ?>
+                <?php endforeach ?>
             </tbody>
         </table>
     </div>
