@@ -5,6 +5,17 @@ $titre = "Accueil";
 $form_errors = [];
 $errorOccured = false;
 
+$now = date('Y-m-d H:i:s');
+$shouldApply = false;
+
+foreach($devoirs as $type => $devoir) {
+    if($type != 'all' && $now <= $devoir['deadline'] )
+    {
+        $shouldApply = true;
+        break;
+    }
+}
+
 if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricule']) && isset($_FILES['devoir']))
 {
     require __DIR__ . DIRECTORY_SEPARATOR . 'dbconfig.php';
@@ -122,6 +133,11 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
         }
     }
 }
+
+require 'dbconfig.php';
+$stmt = $db->prepare("SELECT DISTINCT d1.id, e.matricule, d1.devoir_type, d1.date_envoi FROM etudiant e INNER JOIN devoir d1 ON e.id = d1.etudiant_id LEFT JOIN devoir d2 ON d1.etudiant_id = d2.etudiant_id AND d1.devoir_type = d2.devoir_type AND d1.date_envoi < d2.date_envoi WHERE d2.etudiant_id IS NULL ORDER BY d1.date_envoi DESC;");
+$stmt->execute();
+$data = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 ?>
 
 <?php require('partials/header.php') ?>
@@ -145,64 +161,126 @@ if(isset($_POST['nom']) && isset($_POST['type-devoir']) && isset($_POST['matricu
     </form>
 <?php endif ?>
 
-<h1 class="my-4">Je rends mon devoir en Cybersécurité</h1>
 
-<div class="alert alert-success">
-    <p>Deadlines</p>
 
-    <ul>
-        <?php foreach($devoirs as $type => $devoir): ?>
-            <?php if ($type === 'all') continue; ?>
-            <li><?= $devoir['nom'] . ' : <b>' . date('d/m/Y à H:i:s', strtotime($devoir['deadline'])) . '</b>' ?></li>
-        <?php endforeach ?>
-    </ul>
-</div>
+<h1 class="my-4">Devoirs en Cybersécurité</h1>
+<?php if($shouldApply): ?>
+    <div class="alert alert-success">
+        <p>Deadlines</p>
 
-<?php if($errorOccured) : ?>
-
-    <div class="alert alert-warning" role="alert">
-        <p class="fw-bold">Veuillez corriger ces erreurs</p>
-        <?php foreach ($form_errors as $error): ?>
-            <li><?= $error ?></li>
-        <?php endforeach ?>
+        <ul>
+            <?php foreach($devoirs as $type => $devoir): ?>
+                <?php if ($type === 'all') continue; ?>
+                <li><?= $devoir['nom'] . ' : <b>' . date('d/m/Y à H:i:s', strtotime($devoir['deadline'])) . '</b>' ?></li>
+            <?php endforeach ?>
+        </ul>
     </div>
-<?php elseif(isset($matricule)) : ?>
-    <div class="alert alert-success m-4">
-        <h1>Félicitations !</h1>
-        <p>Votre devoir a été enregistré avec succès</p>
-        <p>Vous pouvez le consulter à partir de <a href='<?="https://docs.google.com/viewer?url=$baseUrl/$upload_dir/$fichier"?>'>ce lien</a></p>
+
+
+    <?php if($errorOccured) : ?>
+
+        <div class="alert alert-warning" role="alert">
+            <p class="fw-bold">Veuillez corriger ces erreurs</p>
+            <?php foreach ($form_errors as $error): ?>
+                <li><?= $error ?></li>
+            <?php endforeach ?>
+        </div>
+    <?php elseif(isset($matricule)) : ?>
+        <div class="alert alert-success m-4">
+            <h1>Félicitations !</h1>
+            <p>Votre devoir a été enregistré avec succès</p>
+            <p>Vous pouvez le consulter à partir de <a href='<?="https://docs.google.com/viewer?url=$baseUrl/$upload_dir/$fichier"?>'>ce lien</a></p>
+        </div>
+    <?php endif ?>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom complet</label>
+            <input class="form-control" value="<?= $errorOccured ? $nom : "" ?>" id="matricule" type="text" name="nom">
+        </div>
+        
+        <div class="mb-3">
+            <label for="matricule" class="form-label">Matricule</label>
+            <input class="form-control" value="<?= $errorOccured ? $matricule : "" ?>" id="matricule" type="text" name="matricule">
+        </div>
+
+        <div class="mb-3">
+            <?php $now = date('Y-m-d H:i:s');?>
+            <label for="matricule" class="form-label">Quel dévoir déposez-vous ?</label>
+            <select name="type-devoir" id="type-devoir" class="form-select">
+                <?php foreach($devoirs as $type => $devoir) : ?>
+                    <option <?= $type !== 'all' && $now > $devoir['deadline'] ? "disabled" : "" ?> value="<?= $type ?>" <?= $errorOccured && $type_devoir === $type ? "selected" : "" ?>><?= $devoir['nom'] . ' - ' . $devoir['deadline'] ?></option>
+                <?php endforeach ?>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <input class="form-control" type="file" name="devoir" id="devoir">
+        </div>
+
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">Envoyer</button>
+        </div>
+
+    </form>
+
+<?php else: ?>
+    <div class="alert alert-warning">
+        <p class="fw-bold">GBO GBO GBO</p>
+        <p>Le délai de soumission est dépassé !</p>
+        <p>Keep up the good work guys !</p>
     </div>
 <?php endif ?>
 
-<form action="" method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label for="nom" class="form-label">Nom complet</label>
-        <input class="form-control" value="<?= $errorOccured ? $nom : "" ?>" id="matricule" type="text" name="nom">
-    </div>
-    
-    <div class="mb-3">
-        <label for="matricule" class="form-label">Matricule</label>
-        <input class="form-control" value="<?= $errorOccured ? $matricule : "" ?>" id="matricule" type="text" name="matricule">
-    </div>
+<div><canvas id="chart"></canvas></div>
 
-    <div class="mb-3">
-        <?php $now = date('Y-m-d H:i:s');?>
-        <label for="matricule" class="form-label">Quel dévoir déposez-vous ?</label>
-        <select name="type-devoir" id="type-devoir" class="form-select">
-            <?php foreach($devoirs as $type => $devoir) : ?>
-                <option <?= $type !== 'all' && $now > $devoir['deadline'] ? "disabled" : "" ?> value="<?= $type ?>" <?= $errorOccured && $type_devoir === $type ? "selected" : "" ?>><?= $devoir['nom'] . ' - ' . $devoir['deadline'] ?></option>
-            <?php endforeach ?>
-        </select>
-    </div>
 
-    <div class="mb-3">
-        <input class="form-control" type="file" name="devoir" id="devoir">
-    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" integrity="sha512-ZwR1/gSZM3ai6vCdI+LVF1zSq/5HznD3ZSTk7kajkaj4D292NLuduDCO1c/NT8Id+jE58KYLKT7hXnbtryGmMg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+const data = JSON.parse('<?=$data?>');
 
-    <div class="mb-3">
-        <button class="btn btn-primary" type="submit">Envoyer</button>
-    </div>
+const devoirs = [
+    { nom: 'intrusion-windows', count: 0},
+    { nom: 'intrusion-metasploitable', count: 0},
+    { nom: 'audit-web', count: 0},
+], devoirToIdx = {
+    'intrusion-windows': 0,
+    'intrusion-metasploitable': 1,
+    'audit-web': 2,
+}
 
-</form>
 
+for(let devoir of data) {
+    // console.log(devoir)
+    devoirs[devoirToIdx[devoir['devoir_type']]].count++
+}
+
+
+console.table(devoirs)
+console.log(devoirs.map(row => row.nom))
+
+new Chart(
+    document.getElementById('chart'),
+    {
+      type: 'bar',
+      data: {
+        labels: devoirs.map(row => row.nom),
+        datasets: [
+          {
+            label: 'Soumissions par Dévoir',
+            data: devoirs.map(row => row.count)
+          }
+        ]
+      },
+      scales: {
+        y: {
+            type: 'linear',
+            ticks: {
+                precision: 0
+            },
+        },
+      }
+    }
+  );
+</script>
 <?php require('partials/footer.php') ?>
