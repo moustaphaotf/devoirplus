@@ -19,11 +19,11 @@ if(!isset($_SESSION["USER"]))
 require __DIR__ . DIRECTORY_SEPARATOR . 'dbconfig.php';
 
 if ($devoir_a_montrer == "all") {
-    $stmt = $db->prepare("SELECT e.nom, e.matricule, d1.devoir_type, d1.fichier, d1.date_envoi FROM etudiant e INNER JOIN devoir d1 ON e.id = d1.etudiant_id LEFT JOIN devoir d2 ON d1.etudiant_id = d2.etudiant_id AND d1.devoir_type = d2.devoir_type AND d1.date_envoi < d2.date_envoi WHERE d2.etudiant_id IS NULL ORDER BY d1.date_envoi DESC;");
+    $stmt = $db->prepare("SELECT DISTINCT e.nom, e.matricule, d1.devoir_type, d1.fichier, d1.date_envoi FROM etudiant e INNER JOIN devoir d1 ON e.id = d1.etudiant_id LEFT JOIN devoir d2 ON d1.etudiant_id = d2.etudiant_id AND d1.devoir_type = d2.devoir_type AND d1.date_envoi < d2.date_envoi WHERE d2.etudiant_id IS NULL ORDER BY d1.date_envoi DESC;");
     $stmt->execute();
 }
 else {
-    $stmt = $db->prepare("SELECT e.nom, e.matricule, d1.devoir_type, d1.fichier, d1.date_envoi FROM etudiant e INNER JOIN devoir d1 ON e.id = d1.etudiant_id LEFT JOIN devoir d2 ON d1.etudiant_id = d2.etudiant_id AND d1.devoir_type = d2.devoir_type AND d1.date_envoi < d2.date_envoi WHERE d2.etudiant_id IS NULL AND d1.devoir_type = ? ORDER BY d1.date_envoi DESC;");
+    $stmt = $db->prepare("SELECT DISTINCT e.nom, e.matricule, d1.dezvoir_type, d1.fichier, d1.date_envoi FROM etudiant e INNER JOIN devoir d1 ON e.id = d1.etudiant_id LEFT JOIN devoir d2 ON d1.etudiant_id = d2.etudiant_id AND d1.devoir_type = d2.devoir_type AND d1.date_envoi < d2.date_envoi WHERE d2.etudiant_id IS NULL AND d1.devoir_type = ? ORDER BY d1.date_envoi DESC;");
     $stmt->execute(array($devoir_a_montrer));
 }
 
